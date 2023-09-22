@@ -54,3 +54,16 @@ body {
     background-color: blue;
     flex-grow: 1;
 }
+
+#button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+}
+
+#black {
+    padding: 2%;
+    background-color: black;
+    margin-right: 10px;
+}

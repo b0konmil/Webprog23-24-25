@@ -1,0 +1,56 @@
+body {
+    background-color: burlywood;
+}
+
+.container1 {
+    width: 50%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+}
+
+.container2 {
+    width: 50%;
+    height: 600px;
+    display: flex;
+    flex-direction: row;
+}
+
+.container3 {
+    width: 50%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+}
+
+#vkek {
+    background-color: aqua;
+    flex-grow: 1;
+}
+
+#narancs {
+    background-color: orange;
+    flex-grow: 1;
+    width: 10%;
+    margin-right: 40px;
+}
+
+#piros {
+    background-color: red;
+    flex-grow: 1;
+    width: 50%;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#lila {
+    background-color: purple;
+    flex-grow: 1;
+    width: 10%;
+    margin-left: 40px;
+}
+
+#skek {
+    background-color: blue;
+    flex-grow: 1;
+}

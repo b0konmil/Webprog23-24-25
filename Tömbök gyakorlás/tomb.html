@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="Elso()">Első elem</button>
+    <button onclick="Masodik()">Második elem</button>
+    <button onclick="Harmadik()">Harmadik elem</button>
+    <button onclick="Osszeg()">Összeg elem</button>
+    <button onclick="Hossz()">Tömb hossza</button>
+    <button onclick="Torles()">Index érték törlése</button>
+    <input type="text" name="" id="Szoveg">
+    <input type="number" name="" id="Index">
+    <div id="Kiírás"></div>
+    <div id="Elemhossz"></div>
+    <script>
+        let m = document.getElementById("Kiírás");
+        let n = document.getElementById("Elemhossz");
+        let tomb = [1,2,3];
+        
+        function Elso() //Tömb elemeinek kiírása
+        {
+            m.innerHTML = tomb[0];
+        }
+
+        function Masodik()
+        {
+            m.innerHTML = tomb[1];
+        }
+
+        function Harmadik()
+        {
+            m.innerHTML = tomb[2];
+        }
+
+        function Osszeg() //Tömbben lévő elemek összege
+        {
+            m.innerHTML = tomb;
+            tomb.push(document.getElementById("Szoveg").value);
+        }
+
+        function Hossz() //Tömb hossza
+        {
+            n.innerHTML = tomb.length;
+        }
+
+        function Torles()
+        {
+            tomb.splice(document.getElementById("Index").value, 1)
+        }
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    background-color: cadetblue;
+}
+
+.item {
+    width: 200px;
+    height: 200px;
+    background-color: gold;
+    border-radius: 10px;
+    margin: 20px;
+    cursor: pointer;
+}

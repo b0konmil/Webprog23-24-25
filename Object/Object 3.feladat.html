@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fizetések</title>
+</head>
+<body>
+
+<script>
+    let fizetes = {
+        Anna: 2100,
+        Cecil: 1890,
+        Emil: 2050,
+        Gerald: 2920
+    };
+
+    let osszeg = 0;
+    for (let szemely in fizetes) {
+        if (fizetes.hasOwnProperty(szemely)) {
+            console.log(szemely + " fizetése: " + fizetes[szemely]);
+            osszeg += fizetes[szemely];
+        }
+    }
+
+    let eredmenyDiv = document.createElement("div");
+    eredmenyDiv.innerHTML = "Az összes fizetés: " + osszeg;
+    document.body.appendChild(eredmenyDiv);
+</script>
+
+</body>
+</html>

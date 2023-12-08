@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Űrlap példa</title>
+</head>
+<body>
+
+<form id="Form">
+    <label for="textInput">Szöveg:</label>
+    <input type="text" id="textInput" name="text">
+    <button type="button" id="submitButton">Küldés</button>
+</form>
+
+<script>
+    function handleFormSubmit() {
+        var textInput = document.getElementById("textInput");
+        var textValue = textInput.value;
+
+        console.log("Beírt szöveg: " + textValue);
+    }
+
+    var submitButton = document.getElementById("submitButton");
+    submitButton.addEventListener("click", handleFormSubmit);
+</script>
+
+</body>
+</html>

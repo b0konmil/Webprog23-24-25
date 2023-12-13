@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memóriajáték</title>
+  <style>
+    body {
+      background-color: #DED0B6;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .memory-card {
+      width: 100px;
+      height: 100px;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid #ccc;
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: opacity 0.5s ease-out, transform 0.5s ease-in-out;
+    }
+
+    .memory-card.flip {
+      transform: rotateY(180deg);
+    }
+
+    .memory-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+    }
+
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      max-width: 480px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="memory-grid"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cardImages = ['JohnHutcherson.jpg', 'HarHarHar.jpg', 'MewingCat.jpg', 'SurprisedGuy.jpg', 'ImNothingLikeYall.png', 'BidenBlast.jpg', 'JohnHutcherson.jpg', 'HarHarHar.jpg', 'MewingCat.jpg', 'SurprisedGuy.jpg', 'ImNothingLikeYall.png', 'BidenBlast.jpg'];
+    let matchedPairs = 0;
+    let firstCard, secondCard;
+    let lockBoard = false;
+
+    const memoryGrid = document.querySelector('.memory-grid');
+
+    cardImages.sort(() => Math.random() - 0.5);
+
+    for (let i = 0; i < cardImages.length; i++) {
+      const card = document.createElement('div');
+      card.classList.add('memory-card');
+      card.dataset.value = cardImages[i];
+
+      const image = document.createElement('img');
+      image.src = 'Kerdojel.png';
+      image.alt = `Card ${i + 1}`;
+
+      card.appendChild(image);
+      card.addEventListener('click', flipCard);
+
+      memoryGrid.appendChild(card);
+    }
+
+    function flipCard() {
+      if (lockBoard) return;
+      if (this === firstCard) return;
+
+      this.classList.add('flip');
+
+      const image = this.querySelector('img');
+      image.src = this.dataset.value;
+
+      if (!firstCard) {
+        firstCard = this;
+        return;
+      }
+
+      secondCard = this;
+      checkForMatch();
+    }
+
+    function checkForMatch() {
+      let isMatch = firstCard.dataset.value === secondCard.dataset.value;
+
+      isMatch ? disableCards() : unflipCards();
+    }
+
+    function disableCards() {
+      firstCard.removeEventListener('click', flipCard);
+      secondCard.removeEventListener('click', flipCard);
+
+      matchedPairs++;
+      if (matchedPairs === cardImages.length / 2) {
+        alert('Gratulálok! Nyertél!');
+        setTimeout(() => {
+          location.reload();
+        }, 5000);
+      }
+
+      firstCard.style.transition = 'opacity 1.5s ease-out, transform 1.5s ease-out';
+      secondCard.style.transition = 'opacity 1.5s ease-out, transform 1.5s ease-out';
+
+      firstCard.style.opacity = 0;
+      secondCard.style.opacity = 0;
+      firstCard.style.transform = 'scale(0.8)';
+      secondCard.style.transform = 'scale(0.8)';
+
+      resetBoard();
+    }
+
+    function unflipCards() {
+      lockBoard = true;
+
+      setTimeout(() => {
+        firstCard.classList.remove('flip');
+        secondCard.classList.remove('flip');
+
+        const firstImage = firstCard.querySelector('img');
+        const secondImage = secondCard.querySelector('img');
+        firstImage.src = 'Kerdojel.png';
+        secondImage.src = 'Kerdojel.png';
+
+        resetBoard();
+      }, 1000);
+    }
+
+    function resetBoard() {
+      firstCard.style.transition = 'transform 0.5s ease-in-out';
+      secondCard.style.transition = 'transform 0.5s ease-in-out';
+      [lockBoard] = [false];
+      [firstCard, secondCard] = [null, null];
+    }
+  });
+</script>
+
+</body>
+</html>

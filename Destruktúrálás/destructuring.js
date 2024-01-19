@@ -8,7 +8,7 @@ console.log(model);
 console.log(year);
 console.log(color);
 
-//Kérdések: 1, kisbetűs változóneveket. 2, A változók sorrendje fontos.
+//Kérdések: 1, bármilyen változónevet. 2, A változók sorrendje fontos.
 
 //2. feladat
 let book = {
@@ -25,7 +25,7 @@ console.log(bookAuthor);
 console.log(publicationYear);
 console.log(language);
 
-//Kérdések: 1, camelCase írásmódban. 2, A változók sorrendje itt is fontos.
+//Kérdések: 1, a változónévnek meg kell egyeznie az objektum értékekkel. 2, A változók sorrendje nem fontos.
 
 //3. feladat
 function printStudentInfo({name, age, grade, subjects})

@@ -1,0 +1,12 @@
+1.
+const imageUrl = `https://via.assets.so/game.jpg?id=${id}`;
+helyett
+const imageUrl = `https://via.assets.so/nonexistent.jpg?id=${id}`;
+2.
+A data-id nem egyesével növekszik hanem "0111..." értéket kap minden kattintásnál
+3.
+A data-id kettesével növekszik
+4.
+A reject hibaüzenete megegyezik a  loadingText.innerHTML hbaüzenetével
+5.
+A placeholder más képeket tartalmaz

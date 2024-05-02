@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kurzusok</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Kurzusok</h1>
+  <div id="course-list"></div>
+
+  <label for="course-id-input">Kurzus ID:</label>
+  <input type="text" id="course-id-input" name="course-id-input">
+  <button id="get-course-btn">Kurzus lekérése</button>
+
+  <div id="course-details"></div>
+
+  <h1>Új kurzus létrehozása</h1>
+  <form id="new-course-form">
+    <label for="course-name">Kurzus neve:</label>
+    <input type="text" id="course-name" name="course-name">
+    <button type="submit">Kurzus létrehozása</button>
+  </form>
+
+  <h1>Diák hozzárendelése kurzushoz</h1>
+  <form id="assign-student-form">
+    <label for="course-select">Kurzus:</label>
+    <select id="course-select" name="course-select">
+    </select>
+    <select id="student-select" name="student-select">
+    </select>
+    <button type="submit">Diák hozzárendelése</button>
+  </form>
+
+  <h1>Diákok listája</h1>
+  <div id="student-list"></div>
+
+  <label for="student-id">Diák ID:</label>
+  <input type="number" id="get-student-id">
+  <button id="get-student-btn">Diák lekérése</button>
+
+  <div id="student-details"></div>
+
+  <h1>Diák szerkesztése</h1>
+  <label for="student-id">Diák ID:</label>
+  <input type="number" id="edit-student-id">
+  <button id="edit-student-button">Diák kiválasztása</button>
+  <div id="edit-student-form" style="display: none;">
+    <label for="student-name">Név:</label>
+    <input type="text" id="student-name">
+    <button id="save-changes-button">Mentés</button>
+  </div>
+
+  <h1>Diák törlése</h1>
+  <label for="student-id">Diák ID:</label>
+  <input type="number" id="delete-student-id">
+  <button id="delete-student-btn">Diák törlése</button>
+
+
+  <script src="script.js"></script>
+</body>
+</html>

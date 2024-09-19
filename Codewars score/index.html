@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codewars User Information</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5 mb-4">Codewars Felhasználói Adatok</h1>
+
+        <div class="card input-card shadow mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Felhasználónév</h5>
+                <div class="input-group mb-3">
+                    <input type="text" id="userInput" class="form-control" placeholder="Írjon be egy felhasználónevet">
+                    <div class="input-group-append">
+                        <button id="fetchDataButton" class="btn btn-primary">Pontok lekérése</button>
+                        <button id="fetchAllInfoButton" class="btn btn-success ml-2">Adatok lekérése</button>
+                    </div>
+                </div>
+                <p id="error" class="error-message"></p>
+            </div>
+        </div>
+
+        <div id="resultsContainer" class="card results-card shadow d-none">
+            <div class="card-body">
+                <h5 class="card-title">Nyelvek és pontok</h5>
+                <table id="languagesTable" class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nyelv</th>
+                            <th>Felhasználó</th>
+                            <th>Elért pontok</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="allInfoContainer" class="card results-card shadow d-none">
+            <div class="card-body">
+                <h5 class="card-title">Felhasználói adatok</h5>
+                <table id="allInfoTable" class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Attribútum</th>
+                            <th>Érték</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <p id="allInfoError" class="error-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>

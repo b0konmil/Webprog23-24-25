@@ -1,42 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const db = require('./database');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 
 const app = express();
 app.use(bodyParser.json());
 
-const users = [
-  {
-    id: '1',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    class: 'A',
-  },
-  {
-    id: '2',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@example.com',
-    class: 'B',
-  },
-  {
-    id: '3',
-    firstName: 'Mike',
-    lastName: 'Johnson',
-    email: 'mike.johnson@example.com',
-    class: 'C',
-  },
-];
-
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: '3.0.0',
     info: {
-      title: 'User API',
+      title: 'Product API',
       version: '1.0.0',
-      description: 'Felhasználókezelő API',
+      description: 'API for managing products',
     },
     servers: [
       {
@@ -52,159 +29,210 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 /**
  * @swagger
- * components:
- *   schemas:
- *     User:
- *       type: object
- *       required:
- *         - firstName
- *         - lastName
- *         - email
- *         - class
- *       properties:
- *         id:
- *           type: string
- *           description: Id
- *         firstName:
- *           type: string
- *           description: Keresztnév
- *         lastName:
- *           type: string
- *           description: Vezetéknév
- *         email:
- *           type: string
- *           description: Email cím
- *         class:
- *           type: string
- *           description: Osztály
- */
-
-/**
- * @swagger
- * /users:
+ * /products:
  *   get:
- *     summary: Összes felhasználó lekérése
  *     responses:
  *       200:
- *         description: Felhasználók sikeresen lekérve
+ *         description: List of all products
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/User'
+ *                 $ref: '#/components/schemas/Product'
  */
-app.get('/users', (req, res) => res.json(users));
+app.get('/products', (req, res) => {
+  db.all('SELECT * FROM products', [], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.json(rows);
+    }
+  });
+});
 
 /**
  * @swagger
- * /users:
+ * /products:
  *   post:
- *     summary: Új felhasználó hozzáadása
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/ProductInput'
  *     responses:
  *       201:
- *         description: Új felhasználó sikeresen hozzáadva
+ *         description: Product created successfully
  */
-app.post('/users', (req, res) => {
-  const newUser = { id: Date.now().toString(), ...req.body };
-  users.push(newUser);
-  res.status(201).json(newUser);
+app.post('/products', (req, res) => {
+  const { name, description, picture, price } = req.body;
+  const sql = 'INSERT INTO products (name, description, picture, price) VALUES (?, ?, ?, ?)';
+  const params = [name, description, picture, price];
+
+  db.run(sql, params, function (err) {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.status(201).json({ id: this.lastID });
+    }
+  });
 });
 
 /**
  * @swagger
- * /users/{id}:
+ * /products/{id}:
  *   get:
- *     summary: Egy adott felhasználó lekérése
  *     parameters:
  *       - in: path
  *         name: id
- *         schema:
- *           type: string
  *         required: true
- *         description: Felhasználó azonosítója
+ *         schema:
+ *           type: integer
+ *         description: Product ID
  *     responses:
  *       200:
- *         description: Felhasználó sikeresen lekérve
+ *         description: Product details
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/Product'
  *       404:
- *         description: Felhasználó nem található
+ *         description: Product not found
  */
-app.get('/users/:id', (req, res) => {
-  const user = users.find((u) => u.id === req.params.id);
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-  res.json(user);
+app.get('/products/:id', (req, res) => {
+  const sql = 'SELECT * FROM products WHERE id = ?';
+  const params = [req.params.id];
+
+  db.get(sql, params, (err, row) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else if (!row) {
+      res.status(404).json({ error: 'Product not found' });
+    } else {
+      res.json(row);
+    }
+  });
 });
 
 /**
  * @swagger
- * /users/{id}:
+ * /products/{id}:
  *   put:
- *     summary: Felhasználó adatainak módosítása
  *     parameters:
  *       - in: path
  *         name: id
- *         schema:
- *           type: string
  *         required: true
- *         description: Felhasználó azonosítója
+ *         schema:
+ *           type: integer
+ *         description: Product ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/ProductInput'
  *     responses:
  *       200:
- *         description: Felhasználó sikeresen módosítva
+ *         description: Product updated successfully
  *       404:
- *         description: Felhasználó nem található
+ *         description: Product not found
  */
-app.put('/users/:id', (req, res) => {
-  const userIndex = users.findIndex((u) => u.id === req.params.id);
-  if (userIndex === -1) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-  users[userIndex] = { ...users[userIndex], ...req.body };
-  res.json(users[userIndex]);
+app.put('/products/:id', (req, res) => {
+  const { name, description, picture, price } = req.body;
+  const sql = `
+    UPDATE products
+    SET name = ?, description = ?, picture = ?, price = ?
+    WHERE id = ?
+  `;
+  const params = [name, description, picture, price, req.params.id];
+
+  db.run(sql, params, function (err) {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else if (this.changes === 0) {
+      res.status(404).json({ error: 'Product not found' });
+    } else {
+      res.json({ message: 'Product updated successfully' });
+    }
+  });
 });
 
 /**
  * @swagger
- * /users/{id}:
+ * /products/{id}:
  *   delete:
- *     summary: Felhasználó törlése
  *     parameters:
  *       - in: path
  *         name: id
- *         schema:
- *           type: string
  *         required: true
- *         description: Felhasználó azonosítója
+ *         schema:
+ *           type: integer
+ *         description: Product ID
  *     responses:
  *       200:
- *         description: Felhasználó sikeresen törölve
+ *         description: Product deleted successfully
  *       404:
- *         description: Felhasználó nem található
+ *         description: Product not found
  */
-app.delete('/users/:id', (req, res) => {
-  const userIndex = users.findIndex((u) => u.id === req.params.id);
-  if (userIndex === -1) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-  users.splice(userIndex, 1);
-  res.json({ message: 'User deleted' });
+app.delete('/products/:id', (req, res) => {
+  const sql = 'DELETE FROM products WHERE id = ?';
+  const params = [req.params.id];
+
+  db.run(sql, params, function (err) {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else if (this.changes === 0) {
+      res.status(404).json({ error: 'Product not found' });
+    } else {
+      res.json({ message: 'Product deleted successfully' });
+    }
+  });
 });
 
-app.listen(3000, () => console.log('Server running at http://localhost:3000/docs'));
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Product:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: Unique product ID
+ *         name:
+ *           type: string
+ *           description: Product name
+ *         description:
+ *           type: string
+ *           description: Product description
+ *         picture:
+ *           type: string
+ *           description: Product image URL
+ *         price:
+ *           type: number
+ *           description: Product price
+ *     ProductInput:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Product name
+ *         description:
+ *           type: string
+ *           description: Product description
+ *         picture:
+ *           type: string
+ *           description: Product image URL
+ *         price:
+ *           type: number
+ *           description: Product price
+ *       required:
+ *         - name
+ *         - price
+ */
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}/docs`);
+});

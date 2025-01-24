@@ -1,0 +1,81 @@
+import Sequelize from "sequelize";
+const { DataTypes, Op } = Sequelize;
+
+const sequelize = new Sequelize({
+	dialect: "sqlite",
+	storage: "./database.sqlite",
+	define: {
+		timestamps: false,
+	},
+});
+
+const Student = sequelize.define(
+	"student",
+	{
+		student_id: {
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
+		name: {
+			type: DataTypes.STRING(255),
+			allowNull: false,
+			validate: {
+				len: [4, 20]
+			}
+		},
+		favorite_class: {
+			type: DataTypes.STRING(25),
+            defaultValue: 'Computer Science'
+		},
+		school_year: {
+			type: DataTypes.INTEGER,
+			allowNull: false
+		},
+        has_language_examination: {
+            type: DataTypes.TINYINT,
+            defaultValue: true
+        }
+	},
+	{
+		freezeTableName: true,
+	}
+);
+
+// SELECT  `username`FROM `students` AS `students` WHERE (`students`.`favorite_class` = 'Computer Science' OR `students`.`has_language_certification` = true);
+Student .sync({ alter: true })
+	.then(() => {
+		return Student.name({
+			where: {
+				[Op.or]: { favorite_class: "Computer Science", has_language_examination: true },
+			},
+		});
+	})
+	.then((data) => {
+		data.forEach((element) => {
+			console.log(element.toJSON());
+		});
+	})
+	.catch((err) => {
+		console.log(`Error: ${err.message}`);
+	});
+
+// SELECT SUM(`name`) AS `num_students` FROM `students` AS `students` GROUP BY `school_year`;
+Student.sync({ alter: true })
+.then(() => {
+    return Student.findAll({
+        attributes: [
+            "name",
+            [sequelize.fn("SUM", sequelize.col("name")), "num_students"],
+        ],
+        group: "school_year",
+    });
+})
+.then((data) => {
+    data.forEach((element) => {
+        console.log(element.toJSON());
+    });
+})
+.catch((err) => {
+    console.log(`Error: ${err.message}`);
+});
